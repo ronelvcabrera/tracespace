@@ -6,11 +6,12 @@ export const INITIAL_STATE: State = {
   board: null,
   savedBoards: [],
   mode: null,
-  loading: false,
+  loading: true,
   updating: false,
   downloading: false,
   layerVisibility: {},
   error: null,
+  processing: false,
 }
 
 export const StateContext = React.createContext<ContextProps>({

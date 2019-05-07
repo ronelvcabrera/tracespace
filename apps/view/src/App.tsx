@@ -13,8 +13,15 @@ import {preventDefault} from './events'
 import {Main} from './ui'
 import {FileEvent} from './types'
 
-function App(): JSX.Element {
-  const {dispatch} = useAppState()
+const NextUrl = (file: string, token: string): string =>
+  `https://staging.newmatik.com/api/method/newmatik.next.endpoints.file.fetch_file?file_name=${file}&token=${token}`
+
+export type AppParams = {
+  params: any
+}
+
+function App(props: AppParams): JSX.Element {
+  const {dispatch, loading, processing, board} = useAppState()
 
   const handleFiles = (event: FileEvent): void => {
     const files =
@@ -28,16 +35,44 @@ function App(): JSX.Element {
   }
 
   const handleUrl = (url: string): void => {
+    console.log('handling url')
+    console.log(url)
     if (url) dispatch(createBoardFromUrl(url))
   }
+  const handleParams = (urlParams: any): any => {
+    let file = ''
+    let token = ''
+    let params = ''
+    for (params in urlParams) {
+      if (urlParams[params].startsWith('token='))
+        token = urlParams[params].split('=')[1]
+
+      if (urlParams[params].startsWith('file='))
+        file = urlParams[params].split('=')[1]
+    }
+    return {
+      file: file,
+      token: token,
+    }
+  }
+
+  const {file, token} = handleParams(props.params)
+
+  setTimeout(() => {
+    if (!processing && board === null) handleUrl(NextUrl(file, token))
+  }, 500)
 
   return (
     <Main onDragOver={preventDefault} onDrop={handleFiles}>
       <BoardDisplay />
       <FileList />
-      <BoardList />
+      {/* <BoardList /> */}
       <Nav handleFiles={handleFiles} handleUrl={handleUrl} />
-      <LoadFiles handleFiles={handleFiles} handleUrl={handleUrl} />
+      <LoadFiles
+        handleFiles={handleFiles}
+        handleUrl={handleUrl}
+        nextURL={NextUrl(file, token)}
+      />
       <ErrorToast />
     </Main>
   )

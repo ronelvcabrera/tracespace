@@ -6,7 +6,7 @@ export default function reducer(state: State, action: Action): State {
   switch (action.type) {
     case actionTypes.CREATE_BOARD:
     case actionTypes.CREATE_BOARD_FROM_URL: {
-      return {...state, loading: true}
+      return {...state, loading: true, processing: true}
     }
 
     case actionTypes.GET_BOARD:

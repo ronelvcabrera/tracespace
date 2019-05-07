@@ -16,19 +16,21 @@ const INPUT_ID = 'load-files_url-input'
 const defaultUrl = (loc: Location | null): string =>
   loc ? `${loc.origin}${loc.pathname}arduino-uno.zip` : ''
 
+import {useAppState, createBoardFromUrl} from '../state'
+
 export type UrlInputProps = {
   children?: React.ReactNode
   handleUrl: (url: string) => unknown
+  nextURL: string
 }
 
 export default function UrlInput(props: UrlInputProps): JSX.Element {
-  const {children, handleUrl} = props
-  const location = useLocation()
+  const {children, handleUrl, nextURL} = props
 
   return (
     <Formik
-      initialValues={{url: defaultUrl(location)}}
-      onSubmit={values => handleUrl(values.url)}
+      initialValues={{url: nextURL}}
+      onSubmit={values => handleUrl(nextURL)}
       enableReinitialize
     >
       {formProps => (
@@ -43,12 +45,9 @@ export default function UrlInput(props: UrlInputProps): JSX.Element {
               type="text"
               className={INPUT_STYLE}
               onClick={select}
+              disabled
             />
-            <Button
-              type="submit"
-              className={BUTTON_STYLE}
-              disabled={!formProps.values.url}
-            >
+            <Button type="submit" className={BUTTON_STYLE} disabled>
               <Icon name="check" />
             </Button>
           </div>

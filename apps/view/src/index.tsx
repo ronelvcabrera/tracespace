@@ -13,9 +13,11 @@ Promise.all([
     {default: App},
   ] = imports
 
+  let params = window.location.search.substring(1).split('&')
+
   ReactDom.hydrate(
     <StateProvider>
-      <App />
+      <App params={params} />
     </StateProvider>,
     document.querySelector('[data-hook=root]')
   )

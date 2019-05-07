@@ -17,6 +17,7 @@ export type State = {
   downloading: boolean
   layerVisibility: LayerVisibilityMap
   error: null | ErrorObject
+  processing: boolean
 }
 
 export type Dispatch = (action: Action) => void
